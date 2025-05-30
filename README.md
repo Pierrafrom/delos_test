@@ -1,6 +1,5 @@
-# DelosChat
-
-**Technical test for DeoSet**: a multi-agent AI chatbot built with Next.js, TypeScript & Tailwind.
+# SportIq
+**Technical test for Delos**: a multi-agent AI chatbot built with Next.js, TypeScript & Tailwind.
 
 ## Features
 

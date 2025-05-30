@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Label } from '@/components/ui/label'
-import { ChatWindow } from './ChatWindow'
-import { ChatControls } from './ChatControls'
+import {useEffect, useRef, useState} from 'react'
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
+import {Label} from '@/components/ui/label'
+import {ChatWindow} from './ChatWindow'
+import {ChatControls} from './ChatControls'
 
 /** Available AI agents */
 const AGENTS = ['Football', 'Tennis', 'Boxing', 'Basketball', 'Formula 1'] as const
@@ -23,6 +23,7 @@ function generateSystemPrompt(agent: Agent): string {
 Tu es un expert mondialement reconnu et un coach passionné dans le domaine du ${agent}.
 Réponds de manière concise, précise et encourageante, comme si tu t’adressais à une personne curieuse ou débutante.
 Donne des conseils concrets, des explications claires, et adapte ton niveau à celui d’un amateur sauf indication contraire.
+Répond dans la meme langue que la question posée.
 `.trim()
 }
 
@@ -47,7 +48,7 @@ export default function ChatPage() {
 
     // Auto-scroll on new messages
     useEffect(() => {
-        scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
+        scrollRef.current?.scrollIntoView({behavior: 'smooth'})
     }, [messages])
 
     /**
@@ -60,10 +61,10 @@ export default function ChatPage() {
 
         // 1) add user bubble + empty AI bubble
         setHistory(prev => {
-            const clone = { ...prev }
+            const clone = {...prev}
             const arr = [...clone[agent]]
-            arr.push({ from: 'user', text: userText })
-            arr.push({ from: 'ai', text: '' })
+            arr.push({from: 'user', text: userText})
+            arr.push({from: 'ai', text: ''})
             aiIndex = arr.length - 1
             clone[agent] = arr
             return clone
@@ -76,11 +77,11 @@ export default function ChatPage() {
         try {
             const res = await fetch('/api/chat', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 signal: abortController.current.signal,
                 body: JSON.stringify({
                     systemPrompt: generateSystemPrompt(agent),
-                    messages: [{ role: 'user', content: userText }],
+                    messages: [{role: 'user', content: userText}],
                 }),
             })
             if (!res.body) throw new Error('No response body')
@@ -91,23 +92,26 @@ export default function ChatPage() {
             let done = false
 
             while (!done) {
-                const { value, done: d } = await reader.read()
+                const {value, done: d} = await reader.read()
                 done = d
                 if (value) {
-                    const chunkStr = decoder.decode(value, { stream: true })
+                    const chunkStr = decoder.decode(value, {stream: true})
                     for (const part of chunkStr.split('\n\n')) {
                         if (!part.startsWith('data: ')) continue
                         const data = part.replace(/^data: /, '').trim()
-                        if (data === '[DONE]') { done = true; break }
+                        if (data === '[DONE]') {
+                            done = true;
+                            break
+                        }
                         try {
-                            const { choices } = JSON.parse(data)
+                            const {choices} = JSON.parse(data)
                             const content = choices?.[0]?.delta?.content
                             if (content) {
                                 // append content to AI bubble
                                 setHistory(prev => {
-                                    const clone = { ...prev }
+                                    const clone = {...prev}
                                     const arr = [...clone[agent]]
-                                    arr[aiIndex] = { from: 'ai', text: arr[aiIndex].text + content }
+                                    arr[aiIndex] = {from: 'ai', text: arr[aiIndex].text + content}
                                     clone[agent] = arr
                                     return clone
                                 })
@@ -125,8 +129,8 @@ export default function ChatPage() {
                     ? '⛔️ Réponse interrompue.'
                     : '⚠️ Erreur lors de la réponse.'
             setHistory(prev => {
-                const clone = { ...prev }
-                clone[agent] = [...clone[agent], { from: 'ai', text: msg }]
+                const clone = {...prev}
+                clone[agent] = [...clone[agent], {from: 'ai', text: msg}]
                 return clone
             })
         } finally {
@@ -159,7 +163,7 @@ export default function ChatPage() {
     /** Saves an edit, removes all bubbles after `idx`, then re-chats */
     async function handleSaveEditAction(idx: number) {
         setHistory(prev => {
-            const clone = { ...prev }
+            const clone = {...prev}
             clone[agent] = clone[agent].slice(0, idx)
             return clone
         })
@@ -179,7 +183,9 @@ export default function ChatPage() {
         <div className="max-w-4xl mx-auto p-4 grid gap-6">
             {/* Agent selector */}
             <div>
-                <h1 className="text-3xl font-bold mb-4 text-center">Discute avec un agent IA</h1>
+                <h1 className="text-3xl font-bold mb-4 text-center">
+                    Talk to an AI Agent
+                </h1>
                 <RadioGroup
                     value={agent}
                     onValueChange={v => setAgent(v as Agent)}
@@ -187,7 +193,7 @@ export default function ChatPage() {
                 >
                     {AGENTS.map(a => (
                         <div key={a} className="flex items-center space-x-2">
-                            <RadioGroupItem value={a} id={a} />
+                            <RadioGroupItem value={a} id={a}/>
                             <Label htmlFor={a}>{a}</Label>
                         </div>
                     ))}

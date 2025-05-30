@@ -28,10 +28,10 @@ export default function Home() {
             </header>
 
             {/* Features */}
-            <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
+            <h2 className="mt-16 text-3xl font-semibold text-gray-800 mb-8 text-center">
                 Features
             </h2>
-            <section className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[
                     {
                         title: 'Specialized Coaches',

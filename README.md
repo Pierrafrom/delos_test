@@ -14,7 +14,7 @@
 
 - **Frontend**: Next.js App Router, React, Shadcn UI, Tailwind CSS
 - **Backend**: Edge API route streaming GPT-4 via OpenAI
-- **Deploy**: Vercel (https://your-vercel-app.vercel.app)
+- **Deploy**: Vercel (https://delos-test.vercel.app/chat)
 
 ## Getting Started
 
